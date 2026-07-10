@@ -1,6 +1,6 @@
 ---
 name: codex-implementer
-description: Default implementation lane running GPT-5.6 Sol via the OpenAI Codex CLI (`codex exec`, reasoning effort high). Route implementation work here — the spec determines the outcome and codex does the typing at a fraction of the architect's token cost, from a different model family than the session. Receives the standard five-part spec; drives codex to write the code; returns a structured report with verification evidence. Requires the `codex` CLI installed and authenticated — reports a structured error if it is missing, never silently substitutes itself.
+description: Default implementation lane running GPT-5.6 Sol via the OpenAI Codex CLI (`codex exec`, reasoning effort xhigh). Route implementation work here — the spec determines the outcome and codex does the typing at a fraction of the architect's token cost, from a different model family than the session. Receives the standard five-part spec; drives codex to write the code; returns a structured report with verification evidence. Requires the `codex` CLI installed and authenticated — reports a structured error if it is missing, never silently substitutes itself.
 model: sonnet
 tools: Bash, Read, Grep, Glob
 ---
@@ -46,7 +46,7 @@ and include its actual output in your final message."]
 SPEC_EOF
 ```
 
-2. Invoke codex non-interactively, sandboxed to the workspace, with reasoning effort pinned high:
+2. Invoke codex non-interactively, sandboxed to the workspace, with reasoning effort pinned xhigh:
 
 ```bash
 # Portable timeout: macOS has no `timeout` unless coreutils is installed
@@ -55,7 +55,7 @@ T=$(command -v gtimeout || command -v timeout || true)
 
 ${T:+$T 600} codex exec \
   --model gpt-5.6-sol \
-  -c model_reasoning_effort=high \
+  -c model_reasoning_effort=xhigh \
   --sandbox workspace-write \
   --skip-git-repo-check \
   --cd "$(pwd)" \
@@ -68,7 +68,7 @@ Flag discipline (non-negotiable):
 | Flag | Why |
 |---|---|
 | `--sandbox workspace-write` | Codex writes code, scoped to the working tree. Never `danger-full-access`. |
-| `-c model_reasoning_effort=high` | The lane's whole value is maximum-effort GPT-5.6 Sol. |
+| `-c model_reasoning_effort=xhigh` | The lane's whole value is maximum-effort GPT-5.6 Sol. |
 | `--skip-git-repo-check` + `--cd "$(pwd)"` | Deterministic working root; works outside git repos. |
 | `- < spec file` | Prompt via stdin. No quoting hazards, no truncated specs. |
 | `${T:+$T 600}` | Ten-minute wall clock when `timeout`/`gtimeout` exists (macOS needs `brew install coreutils`); runs uncapped otherwise. On timeout, report `STATUS: timeout` with whatever landed. |
