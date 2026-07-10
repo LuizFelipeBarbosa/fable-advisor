@@ -16,7 +16,7 @@ The plugin ships the **orchestration skill** — the routing doctrine that teach
 ## Install
 
 ```
-claude plugin marketplace add DannyMac180/fable-advisor
+claude plugin marketplace add LuizFelipeBarbosa/fable-advisor
 claude plugin install fable-advisor
 ```
 
@@ -86,9 +86,13 @@ touching 3+ files, consult the fable-advisor agent and act on its verdict.
 
 **Why not just run everything on Fable?** You can. It's excellent. It's also the most expensive lane per token, and most of a session's tokens are implementation mechanics that the cheap lanes handle at near-parity. Spend the premium where judgment lives.
 
-**Upgrading from v3?** v4 removes the `grok-implementer` lane — `codex-implementer` (GPT-5.6 Sol via the Codex CLI) is now the sole typing lane. The `fable-advisor` agent is unchanged, and advisor-only mode works exactly as before. If you still want the Grok lane, grab [`grok-implementer.md` from the v3.0.0 tag](https://github.com/DannyMac180/fable-advisor/blob/92e35f4/agents/grok-implementer.md); v2's Claude implementer lives at [`implementer.md` on the v2.1.0 tag](https://github.com/DannyMac180/fable-advisor/blob/3c1846c/agents/implementer.md).
+**Upgrading from v3?** v4 removes the `grok-implementer` lane — `codex-implementer` (GPT-5.6 Sol via the Codex CLI) is now the sole typing lane. The `fable-advisor` agent is unchanged, and advisor-only mode works exactly as before. If you still want the Grok lane, grab [`grok-implementer.md` from the v3.0.0 tag](https://github.com/LuizFelipeBarbosa/fable-advisor/blob/92e35f4/agents/grok-implementer.md); v2's Claude implementer lives at [`implementer.md` on the v2.1.0 tag](https://github.com/LuizFelipeBarbosa/fable-advisor/blob/3c1846c/agents/implementer.md).
 
 **Why a GPT-5.6 Sol lane in a Claude plugin?** Vendor diversity. Models from one family share blind spots; an independent implementation from a different lineage catches what same-family review misses — and with Claude as the architect, *every* diff gets cross-vendor review for free. The architect stays Claude — the lane is a producer, not a judge.
+
+## Credits
+
+Independently maintained fork of [DannyMac180/fable-advisor](https://github.com/DannyMac180/fable-advisor) by Dan McAteer.
 
 ## License
 
