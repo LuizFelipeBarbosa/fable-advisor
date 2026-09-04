@@ -30,7 +30,16 @@ Deciding rule: how much does the outcome depend on judgment the spec can't captu
 
 The codex lane is a non-Anthropic family, so every implementation gets genuine cross-vendor review from the Claude architect — the review is built into the routing, not bolted on.
 
-If the codex lane returns `unavailable` or `timeout`, implement with a Claude subagent and state the downgrade plainly in your report — never quietly absorb the substitution.
+If the codex lane returns `unavailable`, implement with the built-in `general-purpose` agent and state the downgrade plainly in your report — never quietly absorb the substitution. If it returns `timeout`, the spec was too big for one run: split it (see "Sizing a delegation") before falling back.
+
+## Sizing a delegation
+
+The lane runs one `codex exec` under a ten-minute wall clock, at maximum reasoning effort, with no network. Size specs to that box:
+
+- **One concern, a handful of files.** A feature touching three to six files with a verification command that finishes in under a minute is the comfortable size. Beyond that, split by dependency order and delegate the pieces serially — or in parallel if they share no files.
+- **Verification must be self-contained.** Dependencies are installed before delegation, not by the lane. A spec whose check needs `npm install` or a fresh container fails inside the sandbox.
+- **A timeout is a sizing failure, not a lane failure.** Don't re-send the same spec; cut it down and re-send the pieces.
+- Overrides: `FABLE_ADVISOR_CODEX_MODEL` and `FABLE_ADVISOR_CODEX_EFFORT` change the lane's model and reasoning effort for the session without editing the plugin. Lower the effort for genuinely mechanical work; keep xhigh for anything correctness-critical.
 
 ## The spec contract
 
@@ -43,6 +52,29 @@ Implementers share none of your conversation context. Every delegation prompt ca
 5. **Verification** — the command(s) that prove it works
 
 A spec you can't finish writing is a signal the decision isn't made yet — that's architect work, not a reason to hand the ambiguity to a cheaper model.
+
+A spec that fits the contract looks like this:
+
+```
+Objective: Add a per-client rate limiter to the public API. Requests over
+the limit return 429 with a Retry-After header; limits are configured per
+API key and default to 100/min.
+
+Files:
+- src/middleware/rateLimit.ts (create)
+- src/server.ts (register the middleware before the router)
+- test/rateLimit.test.ts (create)
+
+Interfaces:
+- export function rateLimit(opts: { limitPerMinute: number; keyFrom: (req) => string }): Middleware
+- Store is the existing Redis client from src/lib/redis.ts — do not add a new one.
+
+Constraints:
+- No new dependencies. Follow the middleware pattern in src/middleware/auth.ts.
+- Do not touch the router or the auth middleware.
+
+Verification: npm test -- rateLimit
+```
 
 ## Parallelism
 

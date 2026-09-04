@@ -32,7 +32,7 @@ Then start your session as the architect:
 
 - **Claude Code ≥ 2.1.170** with a subscription that includes Fable 5 (Pro, Max, Team, or Enterprise — all current consumer plans qualify).
 - **No Fable access** (e.g. API-key billing)? Use `/model opus` for the session and change `model: fable` → `model: opus` in the advisor file. Same pattern, model tiers shift down one.
-- **Codex lane (the implementer):** the `codex-implementer` agent needs the [OpenAI Codex CLI](https://github.com/openai/codex) installed and authenticated (`npm i -g @openai/codex`, then `codex login`). It drives **GPT-6 Astra** headlessly (`codex exec --model gpt-6-astra …`). Without it the agent reports `STATUS: unavailable` — it never silently falls back to a Claude model.
+- **Codex lane (the implementer):** the `codex-implementer` agent needs the [OpenAI Codex CLI](https://github.com/openai/codex) installed and authenticated (`npm i -g @openai/codex`, then `codex login`). It drives **GPT-6 Astra** headlessly (`codex exec --model gpt-6-astra …`, reasoning effort xhigh). Without it the agent reports `STATUS: unavailable` — it never silently falls back to a Claude model. To track a different codex model or effort without editing the plugin, set `FABLE_ADVISOR_CODEX_MODEL` / `FABLE_ADVISOR_CODEX_EFFORT` in your environment.
 - Heads-up: if a pinned Claude model isn't available on your account, Claude Code silently falls back to your session model — the pattern degrades quietly rather than erroring. If results feel unremarkable, check your plan. (This quiet fallback applies only to Claude model pins — the codex lane always fails loudly with a structured error.)
 
 Model resolution order in Claude Code: `CLAUDE_CODE_SUBAGENT_MODEL` env var → per-invocation `model` parameter → agent frontmatter → session model.
@@ -85,6 +85,8 @@ touching 3+ files, consult the fable-advisor agent and act on its verdict.
 **Does this work on claude.ai?** No — subagent model routing is Claude Code only (CLI, desktop, VS Code, web).
 
 **Why not just run everything on Fable?** You can. It's excellent. It's also the most expensive lane per token, and most of a session's tokens are implementation mechanics that the cheap lanes handle at near-parity. Spend the premium where judgment lives.
+
+**Upgrading from v4.0?** v4.1 moved the lane to GPT-6 Astra; v4.2 hardens the agent — a portable ten-minute wall clock (no more `coreutils` requirement), a login check in preflight, a JSON schema for codex's final report, env-var overrides for model and effort — and adds delegation sizing rules and a worked example spec to the orchestration skill. No action needed on upgrade.
 
 **Upgrading from v3?** v4 removes the `grok-implementer` lane — `codex-implementer` (GPT-6 Astra via the Codex CLI) is now the sole typing lane. The `fable-advisor` agent is unchanged, and advisor-only mode works exactly as before. If you still want the Grok lane, grab [`grok-implementer.md` from the v3.0.0 tag](https://github.com/LuizFelipeBarbosa/fable-advisor/blob/92e35f4/agents/grok-implementer.md); v2's Claude implementer lives at [`implementer.md` on the v2.1.0 tag](https://github.com/LuizFelipeBarbosa/fable-advisor/blob/3c1846c/agents/implementer.md).
 

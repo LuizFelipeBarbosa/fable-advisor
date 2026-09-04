@@ -1,6 +1,6 @@
 {
   "name": "fable-advisor",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "Run your session on Claude's most capable model as a full-time architect: it writes specs and verdicts while a GPT-6 Astra (via codex) lane does the typing. Fable-level judgment, cross-vendor implementation, cheap-lane bills.",
   "author": {
     "name": "Luiz Felipe Barbosa",
