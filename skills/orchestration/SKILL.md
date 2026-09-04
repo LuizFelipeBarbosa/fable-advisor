@@ -23,7 +23,7 @@ What stays with the architect regardless of cost: decomposition, interface desig
 
 | Lane | Producer | Invoke | Route here when |
 |---|---|---|---|
-| Implementation | GPT-5.6 Sol | `codex-implementer` agent | Every implementation task: boilerplate, wiring, CRUD, mechanical edits, features, and correctness-critical work alike. **Default lane.** Requires the codex CLI. |
+| Implementation | GPT-6 Astra | `codex-implementer` agent | Every implementation task: boilerplate, wiring, CRUD, mechanical edits, features, and correctness-critical work alike. **Default lane.** Requires the codex CLI. |
 | Judgment | Fable 5 | `fable-advisor` agent | Not an implementation lane. See "Commitment boundaries" below. |
 
 Deciding rule: how much does the outcome depend on judgment the spec can't capture? Little → the codex lane; you will verify anyway. A lot, and mistakes are costly → keep that piece with the architect.

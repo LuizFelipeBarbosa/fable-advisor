@@ -6,10 +6,10 @@ Claude Code lets every subagent run on a different model — and lets the sessio
 
 | Lane | Producer | Invocation | Route here when |
 |---|---|---|---|
-| Implementation | **GPT-5.6 Sol** | `codex-implementer` agent (default) | Every implementation task — codex does the typing via the [Codex CLI](https://github.com/openai/codex) |
+| Implementation | **GPT-6 Astra** | `codex-implementer` agent (default) | Every implementation task — codex does the typing via the [Codex CLI](https://github.com/openai/codex) |
 | Judgment | Fable 5 | `fable-advisor` agent | Commitment boundaries — see below |
 
-Tokens route by volume: the expensive model emits the fewest tokens (judgment and specs), the cheap lane emits the most (code). Implementation mechanics are ~90% of a session's tokens and GPT-5.6 Sol handles them at near-parity — so this runs far cheaper than Fable-for-everything, and every implementation comes from a *different model family* than the architect that reviews it: cross-vendor review is built into the routing, not bolted on.
+Tokens route by volume: the expensive model emits the fewest tokens (judgment and specs), the cheap lane emits the most (code). Implementation mechanics are ~90% of a session's tokens and GPT-6 Astra handles them at near-parity — so this runs far cheaper than Fable-for-everything, and every implementation comes from a *different model family* than the architect that reviews it: cross-vendor review is built into the routing, not bolted on.
 
 The plugin ships the **orchestration skill** — the routing doctrine that teaches the session when to use each lane, the cost discipline that keeps the expensive model's own token volume minimal (emit judgment not volume, keep context lean, reason once then hand off), the five-part spec contract that makes context-free delegation safe, and the verification rules that keep cheap lanes honest.
 
@@ -32,7 +32,7 @@ Then start your session as the architect:
 
 - **Claude Code ≥ 2.1.170** with a subscription that includes Fable 5 (Pro, Max, Team, or Enterprise — all current consumer plans qualify).
 - **No Fable access** (e.g. API-key billing)? Use `/model opus` for the session and change `model: fable` → `model: opus` in the advisor file. Same pattern, model tiers shift down one.
-- **Codex lane (the implementer):** the `codex-implementer` agent needs the [OpenAI Codex CLI](https://github.com/openai/codex) installed and authenticated (`npm i -g @openai/codex`, then `codex login`). It drives **GPT-5.6 Sol** headlessly (`codex exec --model gpt-5.6-sol …`). Without it the agent reports `STATUS: unavailable` — it never silently falls back to a Claude model.
+- **Codex lane (the implementer):** the `codex-implementer` agent needs the [OpenAI Codex CLI](https://github.com/openai/codex) installed and authenticated (`npm i -g @openai/codex`, then `codex login`). It drives **GPT-6 Astra** headlessly (`codex exec --model gpt-6-astra …`). Without it the agent reports `STATUS: unavailable` — it never silently falls back to a Claude model.
 - Heads-up: if a pinned Claude model isn't available on your account, Claude Code silently falls back to your session model — the pattern degrades quietly rather than erroring. If results feel unremarkable, check your plan. (This quiet fallback applies only to Claude model pins — the codex lane always fails loudly with a structured error.)
 
 Model resolution order in Claude Code: `CLAUDE_CODE_SUBAGENT_MODEL` env var → per-invocation `model` parameter → agent frontmatter → session model.
@@ -86,9 +86,9 @@ touching 3+ files, consult the fable-advisor agent and act on its verdict.
 
 **Why not just run everything on Fable?** You can. It's excellent. It's also the most expensive lane per token, and most of a session's tokens are implementation mechanics that the cheap lanes handle at near-parity. Spend the premium where judgment lives.
 
-**Upgrading from v3?** v4 removes the `grok-implementer` lane — `codex-implementer` (GPT-5.6 Sol via the Codex CLI) is now the sole typing lane. The `fable-advisor` agent is unchanged, and advisor-only mode works exactly as before. If you still want the Grok lane, grab [`grok-implementer.md` from the v3.0.0 tag](https://github.com/LuizFelipeBarbosa/fable-advisor/blob/92e35f4/agents/grok-implementer.md); v2's Claude implementer lives at [`implementer.md` on the v2.1.0 tag](https://github.com/LuizFelipeBarbosa/fable-advisor/blob/3c1846c/agents/implementer.md).
+**Upgrading from v3?** v4 removes the `grok-implementer` lane — `codex-implementer` (GPT-6 Astra via the Codex CLI) is now the sole typing lane. The `fable-advisor` agent is unchanged, and advisor-only mode works exactly as before. If you still want the Grok lane, grab [`grok-implementer.md` from the v3.0.0 tag](https://github.com/LuizFelipeBarbosa/fable-advisor/blob/92e35f4/agents/grok-implementer.md); v2's Claude implementer lives at [`implementer.md` on the v2.1.0 tag](https://github.com/LuizFelipeBarbosa/fable-advisor/blob/3c1846c/agents/implementer.md).
 
-**Why a GPT-5.6 Sol lane in a Claude plugin?** Vendor diversity. Models from one family share blind spots; an independent implementation from a different lineage catches what same-family review misses — and with Claude as the architect, *every* diff gets cross-vendor review for free. The architect stays Claude — the lane is a producer, not a judge.
+**Why a GPT-6 Astra lane in a Claude plugin?** Vendor diversity. Models from one family share blind spots; an independent implementation from a different lineage catches what same-family review misses — and with Claude as the architect, *every* diff gets cross-vendor review for free. The architect stays Claude — the lane is a producer, not a judge.
 
 ## Credits
 
